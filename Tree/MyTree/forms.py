@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Relationship, RelationshipType, Gender, Person
-from datetime import datea
+from datetime import date
 
 class PersonForm(forms.ModelForm):
     class Meta:
@@ -17,7 +17,7 @@ class PersonForm(forms.ModelForm):
                 'class' : 'form-control',
                 'placeholder' : 'Введите отчество'
             }),
-            'last_nmae' : forms.TextInput(attrs={
+            'last_name' : forms.TextInput(attrs={
                 'class' : 'form-control',
                 'placeholder' : 'Введите фамилию'
             }),
@@ -39,44 +39,40 @@ class PersonForm(forms.ModelForm):
             }),
             'death_date' : forms.DateInput(attrs={
                 'type' : 'date',
-                'class' : 'from-control'
+                'class' : 'form-control'
             }),
-            'birth_date_text' : forms.DateInput(attrs={
-                'type' : 'date',
+            'birth_date_text' : forms.TextInput(attrs={
+                'class' : 'form-control',
                 'placeholder' : 'Например : Зима 1945г'
             }),
-            'death_date_text' : forms.DateInput(attrs={
-                'type' : 'date',
+            'death_date_text' : forms.TextInput(attrs={
+                'class' : 'form-control',
                 'placeholder' : 'Например : Около 1945 - 1950 г'
             }),
             'birth_place' : forms.TextInput(attrs = {
-                'calss' : 'form-control',
+                'class' : 'form-control',
                 "placeholder" : "Где родился: Страна, город, район"
             }),
             'death_place' : forms.TextInput(attrs = {
-                'calss' : 'form-control',
+                'class' : 'form-control',
                 "placeholder" : "Последнее место нахождения: Страна, город, район"
             }),
             'current_residence' : forms.TextInput(attrs = {
-                'calss' : 'form-control',
+                'class' : 'form-control',
                 "placeholder" : "Где живет сейчас?"
             }),
-             'death_place' : forms.TextInput(attrs = {
-                'calss' : 'form-control',
-                "placeholder" : "Последнее место нахождения: Страна, город, район"
-            }),
-            # Професия
+            # Професcия
             'occupation' : forms.TextInput(attrs={
                 'class' : 'form-control',
-                'placeholder' : 'Проффесия или основное занятие'
+                'placeholder' : 'Професcия или основное занятие'
             }),
-            'bio' : forms.TextInput(attrs={
+            'bio' : forms.Textarea(attrs={
                 'class' : 'form-control',
                 'rows' : 5, # Высота в 5 строк
                 'placeholder' : 'Биография человека'
             }),
             'notes' : forms.Textarea(attrs={
-                'class' : 'form-contorl',
+                'class' : 'form-control',
                 'rows' : 3,
                 'placeholder' : 'Дополнительные заметки'
             }),
@@ -95,7 +91,26 @@ class PersonForm(forms.ModelForm):
                 'class': 'form-check-input' 
             }),
             # Поля выбора Select
-            'gender' : forms.Select(atts={
+            'gender' : forms.Select(attrs={
                 'class' : 'form-select'
             }),
         }
+    def __init__(self, *args, **kwargs):
+
+
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['birth_date'].required = False
+        self.fields['death_date'].required = False
+
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, (forms.CheckboxInput, forms.RadioSelect)):
+                if 'class' not in field.widget.attrs:
+                    field.widget.attrs['class'] = 'form-control'
+                if 'placeholder' not in field.widget.attrs: 
+                    field.widget.attrs['placeholder'] = field.label
+        
+
+
+        
