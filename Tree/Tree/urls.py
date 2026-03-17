@@ -21,4 +21,5 @@ from MyTree import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', views.index, name='home'),
+    path('/created/', views.created, name='Создание')
 ]

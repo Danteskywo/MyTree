@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from .models import Person
+from .forms import PersonForm, PersonSearchForm
 
 # Create your views here.
 def index(request):
@@ -10,3 +12,14 @@ def contacts(request):
     return render(request, 'contacts.html', name='contact')
 def addTree(request):
     return render(request, 'addTree.html', name="createTree")
+def created(request):
+    if request.method == 'POST':
+        form = PersonForm(request.POST)
+        if form.is_valid():
+            person = form.save(commit=False)
+            person.created_by = request.user
+            person.save()
+            return redirect('person_dentail', pk=person.pk)
+        else:
+            form = PersonForm()
+    return render(request, '/templates/genealogy/person_form.html', {'form':form})
