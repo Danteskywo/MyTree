@@ -19,7 +19,7 @@ def created(request):
             person = form.save(commit=False)
             person.created_by = request.user
             person.save()
-            return redirect('person_dentail', pk=person.pk)
-        else:
-            form = PersonForm()
-    return render(request, '/templates/genealogy/person_form.html', {'form':form})
+            return redirect('person_detail', pk=person.pk)
+    else:
+        form = PersonForm()
+    return render(request, 'genealogy/person_form.html', {'form':form})
