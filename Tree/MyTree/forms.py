@@ -110,7 +110,27 @@ class PersonForm(forms.ModelForm):
                     field.widget.attrs['class'] = 'form-control'
                 if 'placeholder' not in field.widget.attrs: 
                     field.widget.attrs['placeholder'] = field.label
-        
+    
+    def clean(self):
+        cleaned_data = super().clean()
+
+        birth_date = cleaned_data.get('birth_date')
+        death_date = cleaned_data.get('death_date')
+        is_alive = cleaned_data.get('is_alive')
+        birth_date_text = cleaned_data.get('birth_date_text')
+        death_date_text = cleaned_data.get('death_date_text')
+
+        if is_alive and death_date:
+            raise ValidationError ('Нальзя указать дату смерти, если человек жив')
+        if not is_alive and not death_date and not death_date_text:
+            raise ValidationError ('Укажите дату смерти и описание')
+        if birth_date and death_date and birth_date > death_date:
+            raise ValidationError ('Дата рождения не может быть позже даты смерти')
+        if birth_date and birth_date_text:
+            raise ValidationError ('Укажите дату рождения или описапание (приблизительно)')
+        if death_date and death_date_text:
+            raise ValidationError ('Укажите точную дату смерти или описание (приблизительное)')
+        return cleaned_data
 
 
         
