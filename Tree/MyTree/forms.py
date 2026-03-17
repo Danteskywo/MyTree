@@ -65,11 +65,37 @@ class PersonForm(forms.ModelForm):
                 'calss' : 'form-control',
                 "placeholder" : "Последнее место нахождения: Страна, город, район"
             }),
-
-            
-            
-
-
-
-
+            # Професия
+            'occupation' : forms.TextInput(attrs={
+                'class' : 'form-control',
+                'placeholder' : 'Проффесия или основное занятие'
+            }),
+            'bio' : forms.TextInput(attrs={
+                'class' : 'form-control',
+                'rows' : 5, # Высота в 5 строк
+                'placeholder' : 'Биография человека'
+            }),
+            'notes' : forms.Textarea(attrs={
+                'class' : 'form-contorl',
+                'rows' : 3,
+                'placeholder' : 'Дополнительные заметки'
+            }),
+            #Булевые поля (флажки)
+            'birth_date_approximate': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'  # Специальный класс Bootstrap для чекбоксов
+            }),
+            'death_date_approximate': forms.CheckboxInput(attrs={
+                'class': 'form-check-input' 
+            }),
+            'is_alive': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+                'id' : 'id_is_alive' 
+            }),
+            'is_private': forms.CheckboxInput(attrs={
+                'class': 'form-check-input' 
+            }),
+            # Поля выбора Select
+            'gender' : forms.Select(atts={
+                'class' : 'form-select'
+            }),
         }
