@@ -132,5 +132,57 @@ class PersonForm(forms.ModelForm):
             raise ValidationError ('Укажите точную дату смерти или описание (приблизительное)')
         return cleaned_data
 
+class PersonSearchForm(forms.Form):
+    query = forms.CharField(
+        label = 'Поиск',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class' : 'form-control',
+            'placrholder' : 'Имя, фамилия или отчество...'
+        })
+    )
+
+    GENDER_CHOICES = [
+        ('','Все'),
+        ('M','Мужской'),
+        ('W','Женский'),
+        ('NS','Не указано'),
+    ]
+
+    gender = forms.ChoiceField(
+        label='Пол',
+        choices=GENDER_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={
+            'class' : 'from-select'
+        }) 
+    )
+    ALIVE_CHOICES = [
+        ('','Все'),
+        ('true','Живые'),
+        ('false','Умершие'),
+    ]
+    SORT_CHOICES = [
+        ('last_name','По фамилии'),
+        ('first_name','По имени'),
+        ('birth_date','По дате'),
+        ('-created','Сначала новые'),
+        ('created', 'Сначала чтарые'),
+    ]
+
+    cort_by = forms.ChoiceField(
+        label='Сортировать',
+        choices=SORT_CHOICES,
+        required=False,
+        initial='last_name', # По умолчанию
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
+    def clean_query(self):
+        query = self.cleaned_data.get('query')
+        if query and len(query) < 2:
+            raise ValidationError('Поисковый запрос должен содержать более 2 символов')
+        return query
+    
 
         
